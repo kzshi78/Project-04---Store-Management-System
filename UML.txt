@@ -1,0 +1,361 @@
+# STORE MANAGEMENT SYSTEM
+
+نسخه طراحی اولیه پروژه 4
+
+هدف پروژه:
+ساخت یک سیستم مدیریت فروشگاه با Python که در آن مفاهیم OOP،
+Inheritance، مدیریت سفارش، Business Logic، Regex، Requests و Web Scraping
+به صورت عملی پیاده‌سازی شوند.
+
+---
+
+1. CLASS: Product
+
+---
+
+مسئولیت:
+نماینده یک محصول موجود در فروشگاه.
+
+Attributes:
+
+* product_id
+* name
+* stock
+* price
+* expiration_date
+
+Methods:
+
+* info()
+* **str**()
+
+---
+
+2. CLASS: Customer
+
+---
+
+مسئولیت:
+نماینده یک مشتری فروشگاه و اطلاعات مالی او.
+
+Attributes:
+
+* customer_id
+* name
+* balance
+* phone
+
+Methods:
+
+* info()
+* **str**()
+
+---
+
+3. CLASS: OrderItem
+
+---
+
+مسئولیت:
+نماینده یک قلم از سفارش.
+
+هر Order می‌تواند شامل چند OrderItem باشد.
+هر OrderItem مشخص می‌کند که از یک Product چند عدد خریداری شده است.
+
+Attributes:
+
+* product
+* quantity
+* subtotal
+
+Methods:
+
+* calculate_subtotal()
+* **str**()
+
+---
+
+4. CLASS: Order
+
+---
+
+مسئولیت:
+نماینده یک سفارش کامل.
+
+Attributes:
+
+* order_id
+* customer
+* items
+* total_price
+* date
+* status
+
+Relationships:
+
+* هر Order متعلق به یک Customer است.
+* هر Order شامل چند OrderItem است.
+* هر OrderItem مربوط به یک Product است.
+
+Methods:
+
+* calculate_total()
+* add_item()
+* remove_item()
+* show_order()
+* complete_order()
+* cancel_order()
+* **str**()
+
+---
+
+5. CLASS: Store
+
+---
+
+مسئولیت:
+کلاس اصلی سیستم فروشگاه.
+
+Attributes:
+
+* products
+* customers
+* orders
+* balance
+* commission_rate
+
+Responsibilities:
+
+* مدیریت محصولات
+* مدیریت مشتری‌ها
+* ایجاد و مدیریت سفارش‌ها
+* فروش محصولات
+* بررسی موجودی
+* بررسی موجودی مالی مشتری
+* محاسبه مبلغ سفارش
+* دریافت سهم فروشگاه
+* ثبت سفارش
+
+Methods:
+
+* add_product()
+
+* remove_product()
+
+* find_product()
+
+* show_products()
+
+* add_customer()
+
+* remove_customer()
+
+* find_customer()
+
+* show_customers()
+
+* create_order()
+
+* sell_order()
+
+* show_orders()
+
+* cancel_order()
+
+* calculate_commission()
+
+* update_balance()
+
+---
+
+## RELATIONSHIPS
+
+Store
+|
++---- 1..* ---- Product
+|
++---- 1..* ---- Customer
+|
++---- 1..* ---- Order
+
+Customer
+|
++---- 0..* ---- Order
+
+Order
+|
++---- 1 ---- Customer
+|
++---- 1..* ---- OrderItem
+
+OrderItem
+|
++---- 1 ---- Product
+
+---
+
+## ORDER FLOW
+
+Customer
+|
+| selects products
+v
+Order
+|
++---- OrderItem
+|       |
+|       +---- Product
+|       +---- Quantity
+|
+v
+Calculate Total Price
+|
+v
+Check Product Stock
+|
++---- insufficient --> Reject Order
+|
+v
+Check Customer Balance
+|
++---- insufficient --> Reject Order
+|
+v
+Reduce Product Stock
+|
+v
+Reduce Customer Balance
+|
+v
+Calculate Store Commission
+|
+v
+Increase Store Balance
+|
+v
+Set Order Status = Completed
+
+---
+
+## IMPORTANT BUSINESS RULES
+
+1. سفارش فقط زمانی ثبت می‌شود که تمام محصولات موردنیاز موجود باشند.
+
+2. اگر حتی یکی از محصولات موجودی کافی نداشته باشد،
+   کل سفارش رد می‌شود و هیچ تغییری در موجودی ایجاد نمی‌شود.
+
+3. قبل از تغییر موجودی و Balance باید تمام شرایط سفارش بررسی شوند.
+
+4. اگر Balance مشتری برای پرداخت کل سفارش کافی نباشد،
+   سفارش رد می‌شود.
+
+5. خرید چند عدد از یک محصول با quantity مدیریت می‌شود.
+
+6. خرید چند محصول مختلف در یک Order ثبت می‌شود.
+
+7. total_price برابر مجموع subtotal تمام OrderItemها است.
+
+8. پس از خرید موفق:
+
+   * stock محصولات کاهش پیدا می‌کند.
+   * balance مشتری کاهش پیدا می‌کند.
+   * سهم فروشگاه محاسبه می‌شود.
+   * balance فروشگاه افزایش پیدا می‌کند.
+   * Order ثبت و Completed می‌شود.
+
+9. لغو سفارش باید در صورت مجاز بودن:
+
+   * موجودی محصولات را برگرداند.
+   * مبلغ مشتری را برگرداند.
+   * وضعیت سفارش را Cancelled کند.
+   * وضعیت مالی فروشگاه را اصلاح کند.
+
+10. حذف فیزیکی Product در نسخه اولیه قابل بررسی است.
+    در نسخه‌های پیشرفته‌تر می‌توان به جای حذف واقعی،
+    Product را با active=False غیرفعال کرد تا سابقه سفارش‌ها حفظ شود.
+
+---
+
+## FUTURE DEVELOPMENT
+
+Project 5:
+
+* SQL
+* Database
+* اتصال Python به Database
+* انتقال اطلاعات Product / Customer / Order / OrderItem به Database
+* طراحی جداول و روابط
+* API
+* اتصال Backend API به Database
+
+هدف:
+تبدیل نسخه Python فعلی به یک سیستم Backend واقعی‌تر.
+
+---
+
+## CURRENT CLASS DIAGRAM SUMMARY
+
++----------------------+
+|        Store         |
++----------------------+
+| products             |
+| customers            |
+| orders               |
+| balance              |
+| commission_rate      |
++----------------------+
+| add_product()        |
+| remove_product()     |
+| find_product()       |
+| show_products()      |
+| add_customer()       |
+| remove_customer()    |
+| find_customer()      |
+| show_customers()     |
+| create_order()       |
+| sell_order()         |
+| show_orders()        |
+| cancel_order()       |
++----------+-----------+
+|
+| manages
+|
++-----+------+
+|            |
+v            v
++---------+   +----------+
+| Product |   | Customer |
++---------+   +----------+
+| id      |   | id       |
+| name    |   | name     |
+| stock   |   | balance  |
+| price   |   | phone    |
+| expiry  |   +----------+
++---------+
+^
+|
+| belongs to
+|
++-----+-------------+
+|    OrderItem      |
++-------------------+
+| product           |
+| quantity          |
+| subtotal          |
++---------+---------+
+^
+|
+| contains
+|
++---------+---------+
+|       Order       |
++-------------------+
+| order_id          |
+| customer          |
+| items             |
+| total_price       |
+| date              |
+| status            |
++-------------------+
+
+END OF UML DESIGN
