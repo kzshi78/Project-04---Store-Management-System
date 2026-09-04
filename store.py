@@ -28,7 +28,7 @@ class Store:
     def show_products(self):
         for product in self.products:
                 print(product)
-        return
+        
         
 
     def add_customer(self, new_customer):
@@ -40,7 +40,7 @@ class Store:
                 return customer
         print("Not Found Customer")
 
-    def create_order(self, customer_id, items , date):
+    def create_order(self, customer_id, items):
         customer = None
         for c in self.customers:
             if c.customer_id == customer_id:
@@ -93,7 +93,8 @@ class Store:
         total = order.calculate_total()
         order.customer.balance -= total
         self.balance += total
-        order.status = "Complete"
+        order.status = "Completed"
+        return
         
         
     def cancel_order(self, order_id):
