@@ -52,7 +52,7 @@ class OrderItem:
             f"Subtotal: {self.calculate_subtotal()}"
         )
 
-class Order():
+class Order:
     def __init__(self, order_id, customer, date):
         self.order_id = order_id
         self.customer = customer
@@ -106,3 +106,4 @@ class Order():
       return False
     def __str__(self):
         return self.show_order() 
+    
