@@ -41,6 +41,9 @@ class Store:
         print("Not Found Customer")
 
     def create_order(self, customer_id, items):
+        if not isinstance(items, list):
+            raise TypeError("Items must be a list.")
+        
         customer = None
         for c in self.customers:
             if c.customer_id == customer_id:
@@ -52,6 +55,11 @@ class Store:
             return
 
         for item in items:
+                
+            if not isinstance(item, OrderItem):
+                raise TypeError("Each item must be an OrderItem.")
+            if item.quantity <= 0:
+                raise ValueError("Quantity must be greater than zero.")
             if item.product.stock < item.quantity:
                 print("Not Enough Stock")
                 return
@@ -114,10 +122,18 @@ class Store:
             print("Cannot Cancel Order")
             return
         order.status = "Cancelled"
-        
-        
+
+    def search_order(self, order_id):
+        for order in self.orders:
+            if order.order_id == order_id:
+                return order
+
+        print("Order Not Found")     
 
     def show_orders(self):
         for order in self.orders:
             print(order)
+            
+
+            
         
