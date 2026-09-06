@@ -69,8 +69,8 @@ store.orders.append(order)
 
 
 items = [
-    OrderItem(product1, 1),
-    "Keyboard"
+    OrderItem(product1, 1)
+    
 ]
 
 try:
@@ -78,3 +78,17 @@ try:
 
 except TypeError as error:
     print(error)
+
+available_products = store.get_available_products()
+
+for product in available_products:
+    print(product)
+
+print(store.get_product_names())
+
+expensive = store.get_expensive_products(4900000)
+
+for product in expensive:
+    print(product)
+
+

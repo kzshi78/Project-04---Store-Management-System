@@ -29,8 +29,29 @@ class Store:
         for product in self.products:
                 print(product)
         
-        
+    def get_available_products(self):
+        return list(
+            filter(lambda product: product.stock > 0, self.products)
+        )   
 
+    def show_available_products(self):
+
+        products = self.get_available_products()
+
+        for product in products:
+            print(product)
+
+
+    def get_product_names(self):
+        return list(
+            map(lambda product: product.name, self.products)
+        )
+
+    def get_expensive_products(self, price):
+        return list(
+            filter(lambda product: product.price > price, self.products)
+        )
+    
     def add_customer(self, new_customer):
         self.customers.append(new_customer)
 
