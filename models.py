@@ -1,3 +1,4 @@
+from validators import is_valid_phone
 class Product:
     def __init__(self, product_id, name, stock, price, expiration_date):
         self.product_id = product_id
@@ -25,6 +26,8 @@ class Customer:
         self.name = name
         self.balance = balance
         self.phone = phone
+        if not is_valid_phone(phone):
+            raise ValueError("Invalid phone number")
 
     def info(self):
         return(
@@ -35,6 +38,8 @@ class Customer:
         )
     def __str__(self):
         return self.info()
+    
+
 
 class OrderItem:
     def __init__(self, product, quantity):
